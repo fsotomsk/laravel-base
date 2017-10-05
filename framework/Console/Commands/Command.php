@@ -8,6 +8,7 @@ use Illuminated\Console\Mutex;
 use Illuminated\Console\WithoutOverlapping;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Process\Process;
 
 class Command extends CCommand
 {
@@ -138,4 +139,13 @@ class Command extends CCommand
         return $this;
     }
 
+    /**
+     * @param $command
+     * @return int
+     */
+    public function exec($command)
+    {
+        $path = base_path();
+        return (new Process($command, $path, ['HOME' => base_path()]))->run();
+    }
 }
