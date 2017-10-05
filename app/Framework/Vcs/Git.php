@@ -72,6 +72,17 @@ trait Git
 
     /**
      * @param $dir
+     * @param string $commit
+     * @return $this
+     */
+    protected function reset($dir, $commit="HEAD")
+    {
+        system("cd \"{$dir}\" && git reset --hard {$commit}");
+        return $this;
+    }
+
+    /**
+     * @param $dir
      * @param $tag
      * @param null $comment
      * @return $this
