@@ -4,19 +4,6 @@
     "keywords": ["framework", "cdeep", "laravel"],
     "license": "proprietary",
     "type": "project",
-    "repositories": [
-        {
-            "type": "package",
-            "package": {
-                "name": "cdeep/laravel-base",
-                "version": "0.0.9",
-                "dist": {
-                    "type": "zip",
-                    "url": "https://dev.cdeep.ru/storage/build/laravel-base-v0.0.9.zip"
-                }
-            }
-        }
-    ],
     "require": {
         "php": ">=7.0.0",
         "cdeep/laravel-base": ">=0.0.2",

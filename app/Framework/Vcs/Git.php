@@ -61,11 +61,12 @@ trait Git
 
     /**
      * @param $dir
+     * @param null $branch
      * @return $this
      */
-    protected function push($dir)
+    protected function push($dir, $branch=null)
     {
-        system("cd \"{$dir}\" && git push --tags");
+        system("cd \"{$dir}\" && git push --tags {$branch}");
         return $this;
     }
 
