@@ -11,7 +11,7 @@
 |
 */
 
-$app = new \App\Framework\Application(
+$app = new \CDeep\Helpers\Application(
     realpath(__DIR__.'/../')
 );
 
