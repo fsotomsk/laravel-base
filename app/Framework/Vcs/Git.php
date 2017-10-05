@@ -72,6 +72,19 @@ trait Git
 
     /**
      * @param $dir
+     * @param $tag
+     * @param null $comment
+     * @return $this
+     */
+    protected function tag($dir, $tag, $comment=null)
+    {
+        $comment = $comment ?: $tag;
+        system("cd \"{$dir}\" && git tag -a {$tag} -m \"{$comment}\"");
+        return $this;
+    }
+
+    /**
+     * @param $dir
      * @param $from
      * @param $to
      * @param bool $pullBefore
