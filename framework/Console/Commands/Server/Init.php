@@ -4,7 +4,6 @@ namespace CDeep\Console\Commands\Server;
 
 
 use CDeep\Console\Commands\Command;
-use Symfony\Component\Process\Process;
 
 class Init extends Command
 {
