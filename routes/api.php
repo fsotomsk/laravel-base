@@ -12,6 +12,5 @@
 */
 
 return [
-    \App\Http\Controllers\Api\Main::class,
+    \CDeep\Http\Controllers\Api\Main::class,
 ];
-
