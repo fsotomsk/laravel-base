@@ -20,9 +20,10 @@ class RoutePage
         $action = $request->route()->getAction();
         if ($action && $action['page'] instanceof Page) {
             /**
-             * @var Page $action['page']
+             * @var Page $page
              */
-            $request->currentPage = $action['page']->setup();
+            $page = $action['page'];
+            $request->currentPage = $page->setup();
         }
         return $next($request);
     }

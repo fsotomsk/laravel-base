@@ -202,9 +202,11 @@ class Handler extends ExceptionHandler
                     ? $e->getStatusCode()
                     : $e->getCode();
 
+                /**
+                 * @var Page $error
+                 */
                 $error = Page::indexed($status);
                 if ($error) {
-
                     /**
                      *
                      */

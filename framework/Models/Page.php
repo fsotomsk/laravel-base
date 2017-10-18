@@ -71,24 +71,25 @@ class Page extends Model
 	 */
 	protected static $_pagesCache = null;
 
-	/**
-	 * @param null $id
-	 *
-	 * @return array
-	 */
+    /**
+     * @param int $id
+     * @return \Illuminate\Database\Eloquent\Collection|mixed|null
+     */
 	public static function indexed($id=null)
 	{
-		if (self::$_pagesCache === null) {
-			self::$_pagesCache = \Cache::remember('app:pages:indexed', 1, function() {
-				return parent::all()->keyBy('id') ?: [];
-			});
-		}
-
-		if ($id) {
-			return self::$_pagesCache->get($id) ?: null;
-		}
-
-		return self::$_pagesCache;
+	    try {
+            if (self::$_pagesCache === null) {
+                self::$_pagesCache = \Cache::remember('app:pages:indexed', 1, function() {
+                    return parent::all()->keyBy('id') ?: [];
+                });
+            }
+            if ($id) {
+                return self::$_pagesCache->get($id) ?: null;
+            }
+        } catch (\Exception $e) {
+	        return $id ? null : [];
+        }
+		return self::$_pagesCache ?: [];
 	}
 
     public function isReadable($user)
