@@ -5,9 +5,9 @@ namespace CDeep\Jobs;
 
 trait Status
 {
-    protected function dispatch()
+    protected function dispatchWithStatus()
     {
-        $job   = parent::dispatch();
+        $job   = $this->dispatch($this);
         $jobId = $job->getJobId();
         echo "jonId: [{$jobId}]";
     }
