@@ -58,4 +58,11 @@ trait Trackable
 
         return $this->statusId;
     }
+
+    public function getJobStatus()
+    {
+        return JobStatus::find(
+            $this->getJobStatusId()
+        );
+    }
 }
