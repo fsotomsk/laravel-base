@@ -443,10 +443,10 @@ class LetsEncrypt
      * @return array
      */
     private function simulateChallenges($domains){
-        $token     = uniqid();
-        $challenge = ['token' => $token];
         $okDomains = [];
         foreach($domains as $domain => $documentRoot){
+            $token     = uniqid();
+            $challenge = ['token' => $token];
             $this->writeChallenge($documentRoot, $challenge);
             try {
                 $ret = $this->httpRequest('http://' . $domain . '/' . $this->acmePath . $challenge['token'], null, true);
