@@ -289,7 +289,7 @@ class LetsEncrypt
 
         file_put_contents($documentRoot . $this->acmePath . '.htaccess', 'RewriteEngine Off' . PHP_EOL . 'Allow from all' . PHP_EOL);
 
-        $this->info('writeChallenge: ' . $documentRoot . $this->acmePath);
+        $this->info('writeChallenge: ' . $documentRoot . $this->acmePath . $challenge['token']);
     }
 
     /**
@@ -298,6 +298,7 @@ class LetsEncrypt
      */
     final protected function removeChallenge($documentRoot, $challenge)
     {
+        return;
         unlink($documentRoot . $this->acmePath . $challenge['token']);
         unlink($documentRoot . $this->acmePath . '.htaccess');
         @rmdir($documentRoot . $this->acmePath);
@@ -455,7 +456,7 @@ class LetsEncrypt
                 }
                 usleep(500000);
             } catch(\Exception $e) {
-                $this->info('Domain simulate fail: ' . $domain . ' / ' . $documentRoot);
+                $this->info('Domain simulate fail: ' . $domain . ' / ' . 'http://' . $domain . '/' . $this->acmePath . $challenge['token']);
             } finally {
                 $this->removeChallenge($documentRoot, $challenge);
             }
