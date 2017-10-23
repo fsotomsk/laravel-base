@@ -10,7 +10,7 @@ class MenusSeeder extends Seeder
     public function run()
     {
         //
-        $menu = \App\Models\Menu::find(1);
+        $menu = \CDeep\Models\Menu::find(1);
         if (!$menu) {
             $menus = [
                 [
@@ -34,7 +34,7 @@ class MenusSeeder extends Seeder
             ];
 
             foreach ($menus as $m) {
-                $menu = new \App\Models\Menu($m);
+                $menu = new \CDeep\Models\Menu($m);
                 $menu->save();
             }
         }

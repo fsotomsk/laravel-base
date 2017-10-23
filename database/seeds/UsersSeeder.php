@@ -10,7 +10,7 @@ class UsersSeeder extends Seeder
     public function run()
     {
         //
-        if (!\App\Models\User::find(1)) {
+        if (!\CDeep\Models\User::find(1)) {
 
             $users = [
                 [
@@ -32,7 +32,7 @@ class UsersSeeder extends Seeder
             ];
 
             foreach ($users as $user) {
-                $u = new \App\Models\User($user);
+                $u = new \CDeep\Models\User($user);
                 $u->save();
             }
 

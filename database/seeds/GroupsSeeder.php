@@ -10,7 +10,7 @@ class GroupsSeeder extends Seeder
     public function run()
     {
         //
-        if (!\App\Models\Group::find(1)) {
+        if (!\CDeep\Models\Group::find(1)) {
 
             $groups = [
                 [
@@ -24,7 +24,7 @@ class GroupsSeeder extends Seeder
             ];
 
             foreach ($groups as $group) {
-                (new \App\Models\Group($group))->save();
+                (new \CDeep\Models\Group($group))->save();
             }
         }
     }

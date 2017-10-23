@@ -10,7 +10,7 @@ class PagesSeeder extends Seeder
     public function run()
     {
         //
-        $page = \App\Models\Page::find(1);
+        $page = \CDeep\Models\Page::find(1);
         if (!$page) {
             $pages = [
                 ['id' => 1,     'owner_user_id' => 1, 'owner_group_id' => 1, 'uri' => 'index', 'title' => 'cDeep Site', 'topic' => 'cDeep Site', 'menu' => 'Home', 'keywords' => '', 'description' => '', 'template_resource' => 'site', 'template_env' => '_env/index', 'template_view' => 'main/index', 'show_in_menu' => 1, 'menu_sort_order' => 100, 'is_published' => 1, 'is_enabled' => 1,],
@@ -145,7 +145,7 @@ class PagesSeeder extends Seeder
             ];
 
             foreach ($pages as $p) {
-                $page = new \App\Models\Page($p);
+                $page = new \CDeep\Models\Page($p);
                 $page->save();
             }
         }
