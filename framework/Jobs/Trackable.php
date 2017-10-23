@@ -44,7 +44,8 @@ trait Trackable
     {
         if (!$this->statusId) {
             $status = JobStatus::create([
-                'type' => static::class
+                'type'  => static::class,
+                'queue' => $this->getQueue(),
             ]);
             $this->statusId = $status->id;
         }

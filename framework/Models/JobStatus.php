@@ -42,8 +42,14 @@ use CDeep\Helpers\DB\Model;
  */
 class JobStatus extends Model
 {
-    public $dates = ['started_at', 'finished_at', 'created_at', 'updated_at'];
+    public $dates = [
+        'started_at',
+        'finished_at',
+        Model::CREATED_AT,
+        Model::UPDATED_AT,
+    ];
     protected $guarded = [];
+    protected $casts = [];
 
     /* Accessor */
     public function getInputAttribute($value)
