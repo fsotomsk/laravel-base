@@ -36,7 +36,7 @@
             include fastcgi_params;
     }
 
-    location ~ /\.well-known {
+    location ~ /\.well-known-2 {
         root /var/www/html;
     }
 @endsection
