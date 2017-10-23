@@ -42,10 +42,12 @@ trait Trackable
 
     protected function prepareStatus()
     {
-        $status = JobStatus::create([
-            'type' => static::class
-        ]);
-        $this->statusId = $status->id;
+        if (!$this->statusId) {
+            $status = JobStatus::create([
+                'type' => static::class
+            ]);
+            $this->statusId = $status->id;
+        }
     }
 
     public function getJobStatusId()
