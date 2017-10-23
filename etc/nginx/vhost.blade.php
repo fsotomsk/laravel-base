@@ -49,7 +49,7 @@ server {
 
     @yield('host')
 }
-@if($SSL['CRT'] && $SSL['KEY'] && $SSL['PEM'])
+@if(isset($SSL['CRT']) && isset($SSL['KEY']) && isset($SSL['PEM']))
 server {
 
     listen          443 ssl http2;
