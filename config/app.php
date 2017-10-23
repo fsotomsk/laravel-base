@@ -179,6 +179,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         CDeep\Providers\EventServiceProvider::class,
         CDeep\Providers\RouteServiceProvider::class,
+        CDeep\Providers\JobStatusServiceProvider::class,
 
     ],
 

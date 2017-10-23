@@ -1,7 +1,6 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Migrations\Migration;
+use CDeep\Helpers\DB\{Blueprint, Migration};
 
 class CreateGroupsTable extends Migration
 {
@@ -12,7 +11,7 @@ class CreateGroupsTable extends Migration
      */
     public function up()
     {
-        Schema::create('groups', function (Blueprint $table) {
+        $this->create('groups', function (Blueprint $table) {
 
             $table->bigIncrements('id');
             $table->string('name', 128)->unique();
@@ -31,6 +30,6 @@ class CreateGroupsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('groups');
+        $this->dropIfExists('groups');
     }
 }

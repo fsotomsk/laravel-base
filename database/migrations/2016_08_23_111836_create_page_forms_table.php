@@ -1,7 +1,6 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Migrations\Migration;
+use CDeep\Helpers\DB\{Blueprint, Migration};
 
 class CreatePageFormsTable extends Migration
 {
@@ -12,7 +11,7 @@ class CreatePageFormsTable extends Migration
      */
     public function up()
     {
-        Schema::create('page_forms', function (Blueprint $table) {
+        $this->create('page_forms', function (Blueprint $table) {
 
             $table->unsignedBigInteger('page_id');
             $table->longText('data')->nullable();
@@ -35,6 +34,6 @@ class CreatePageFormsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('page_forms');
+        $this->dropIfExists('page_forms');
     }
 }

@@ -15,6 +15,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
         $this->publishes([
             __DIR__ . '/../../config/'          => $this->app->configPath() . "/",
             __DIR__ . '/../../public/'          => $this->app->publicPath() . "/",

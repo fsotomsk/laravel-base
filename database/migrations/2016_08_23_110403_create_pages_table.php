@@ -1,7 +1,6 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Migrations\Migration;
+use CDeep\Helpers\DB\{Blueprint, Migration};
 
 class CreatePagesTable extends Migration
 {
@@ -12,7 +11,7 @@ class CreatePagesTable extends Migration
      */
     public function up()
     {
-        Schema::create('pages', function (Blueprint $table) {
+        $this->create('pages', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('page_id')->nullable()->index();
             $table->unsignedBigInteger('back_page_id')->nullable()->index();
@@ -80,6 +79,6 @@ class CreatePagesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pages');
+        $this->dropIfExists('pages');
     }
 }
