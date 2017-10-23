@@ -17,7 +17,7 @@ class Configure extends Command
      *
      * @var string
      */
-    protected $signature = 'server:configure {--path=?}';
+    protected $signature = 'server:configure {?--path=}';
 
     /**
      * The console command description.
