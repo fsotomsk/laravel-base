@@ -49,7 +49,7 @@ server {
 
     @yield('host')
 }
-
+@if($SSL['CRT'] && $SSL['KEY'] && $SSL['PEM'])
 server {
 
     listen          443 ssl http2;
@@ -65,8 +65,9 @@ server {
     ssl_dhparam /etc/nginx/ssl/dhparam.pem;
     ssl_prefer_server_ciphers on;
 
-    ssl_certificate         /etc/letsencrypt/live/dev.gradsreda.ru/fullchain.pem;
-    ssl_certificate_key     /etc/letsencrypt/live/dev.gradsreda.ru/privkey.pem;
+    ssl_certificate         {{$SSL['PEM']}};
+    ssl_certificate_key     {{$SSL['KEY']}};
 
     @yield('host')
 }
+@endif

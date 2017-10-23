@@ -36,7 +36,7 @@ class LetsEncrypt extends Command
      */
     public function handle()
     {
-        $sslBasePath    = base_path('etc/ssl');
+        $sslBasePath    = storage_path('etc/ssl');
         if(!is_dir($sslBasePath)) {
             mkdir($sslBasePath, 0755, true);
         }

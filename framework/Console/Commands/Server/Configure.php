@@ -36,11 +36,19 @@ class Configure extends Command
         $domains = config('app.domains');
         $email   = config('app.email');
 
+        $ssl     = glob(storage_path('etc/ssl/{fullchain.pem,certificate.crt,certificate.key}'), GLOB_BRACE);
+        if ($ssl) {
+            foreach ($ssl as $file) {
+                $ssl[ strtoupper(pathinfo($file, PATHINFO_EXTENSION)) ] = $file;
+            }
+        }
+
         $params = [
             'SERVER_NAME'   => array_shift($domains),
             'ALIASES'       => $domains,
             'ADMIN_EMAIL'   => $email,
             'DOCUMENT_ROOT' => $this->option('path') ?: public_path(),
+            'SSL'           => $ssl,
         ];
 
         $this->makeNginxConfig($params);
