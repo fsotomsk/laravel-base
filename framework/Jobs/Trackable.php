@@ -40,12 +40,13 @@ trait Trackable
         }
     }
 
-    protected function prepareStatus()
+    protected function prepareStatus($input=null)
     {
         if (!$this->statusId) {
             $status = JobStatus::create([
                 'type'  => static::class,
                 'queue' => $this->queue,
+                'input' => $input,
             ]);
             $this->statusId = $status->id;
         }
