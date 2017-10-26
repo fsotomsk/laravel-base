@@ -13,8 +13,14 @@ class Migration extends CMigration
      */
     protected $schema = null;
 
+    /**
+     * @var \Illuminate\Database\Connection
+     */
     protected $dbConnection = null;
 
+    /**
+     * Migration constructor.
+     */
     public function __construct()
     {
         $this->dbConnection = DB::connection();
@@ -25,6 +31,35 @@ class Migration extends CMigration
         });
     }
 
+    /**
+     * @var array
+     */
+    protected static $modelTablesCache = [];
+
+    /**
+     * @param $model
+     * @return mixed
+     */
+    public function getModelTable($model)
+    {
+        if (isset(self::$modelTablesCache[$model])) {
+            return self::$modelTablesCache[$model];
+        }
+
+        return self::$modelTablesCache[$model] = (function() use ($model){
+            if (class_exists($model)) {
+                $model = new $model();
+                if ($model instanceof \Illuminate\Database\Eloquent\Model) {
+                    return $model->getTable();
+                }
+            }
+            return null;
+        })();
+    }
+
+    /**
+     * @param $query
+     */
     public function statement($query)
     {
         try {
@@ -32,24 +67,43 @@ class Migration extends CMigration
         } catch (\Exception $e){}
     }
 
+    /**
+     * @param $table
+     * @param $callback
+     */
     public function table($table, $callback)
     {
         try {
-            $this->schema->table($table, $callback);
+            $this->schema->table(
+                $this->getModelTable($table) ?: $table,
+                $callback
+            );
         } catch (\Exception $e){}
     }
 
+    /**
+     * @param $table
+     * @param $callback
+     */
     public function create($table, $callback)
     {
         try {
-            $this->schema->create($table, $callback);
+            $this->schema->create(
+                $this->getModelTable($table) ?: $table,
+                $callback
+            );
         } catch (\Exception $e){}
     }
 
+    /**
+     * @param $table
+     */
     public function dropIfExists($table)
     {
         try {
-            $this->schema->dropIfExists($table);
+            $this->schema->dropIfExists(
+                $this->getModelTable($table) ?: $table
+            );
         } catch (\Exception $e){}
     }
 
