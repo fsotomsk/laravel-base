@@ -42,8 +42,7 @@ class CreatePagesTable extends Migration
             $table->boolean('is_published')->default(1)->index();
             $table->boolean('is_enabled')->default(1)->index();
 
-            $table->timestamp('created_at')->useCurrent();
-            $table->timestamp('updated_at')->nullable();
+            $table->timestamps();
             $table->softDeletes();
 
 	        /**

@@ -16,8 +16,7 @@ class CreatePageFormsTable extends Migration
             $table->unsignedBigInteger('page_id');
             $table->longText('data')->nullable();
 
-            $table->timestamp('created_at')->useCurrent();
-            $table->timestamp('updated_at')->nullable();
+            $table->timestamps();
             $table->softDeletes();
 
             $table->foreign('page_id')

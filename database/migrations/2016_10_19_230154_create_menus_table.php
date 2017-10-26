@@ -19,8 +19,7 @@ class CreateMenusTable extends Migration
 
             $table->text('page_ids')->nullable();
 
-            $table->timestamp('created_at')->useCurrent();
-            $table->timestamp('updated_at')->nullable();
+            $table->timestamps();
             $table->softDeletes();
         });
     }
