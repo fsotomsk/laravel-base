@@ -58,13 +58,27 @@ class Migration extends CMigration
     }
 
     /**
+     * @param \Exception $e
+     */
+    protected function exception(\Exception $e)
+    {
+        if (method_exists($this, 'error')) {
+            $this->error($e->getMessage());
+        } else {
+            echo "{$e->getMessage()}\n";
+        }
+    }
+
+    /**
      * @param $query
      */
     public function statement($query)
     {
         try {
             DB::statement($query);
-        } catch (\Exception $e){}
+        } catch (\Exception $e){
+            $this->exception($e);
+        }
     }
 
     /**
@@ -74,11 +88,10 @@ class Migration extends CMigration
     public function table($table, $callback)
     {
         try {
-            $this->schema->table(
-                $this->getModelTable($table) ?: $table,
-                $callback
-            );
-        } catch (\Exception $e){}
+            $this->schema->table($table, $callback);
+        } catch (\Exception $e){
+            $this->exception($e);
+        }
     }
 
     /**
@@ -92,7 +105,9 @@ class Migration extends CMigration
                 $this->getModelTable($table) ?: $table,
                 $callback
             );
-        } catch (\Exception $e){}
+        } catch (\Exception $e){
+            $this->exception($e);
+        }
     }
 
     /**
@@ -104,7 +119,9 @@ class Migration extends CMigration
             $this->schema->dropIfExists(
                 $this->getModelTable($table) ?: $table
             );
-        } catch (\Exception $e){}
+        } catch (\Exception $e){
+            $this->exception($e);
+        }
     }
 
 }
