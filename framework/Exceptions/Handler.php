@@ -205,8 +205,8 @@ class Handler extends ExceptionHandler
                 /**
                  * @var Page $error
                  */
-                $error = Page::indexed($status);
-                if ($error) {
+                $error = Page::indexed($status ?: -1);
+                if ($error && $error->id) {
                     /**
                      *
                      */

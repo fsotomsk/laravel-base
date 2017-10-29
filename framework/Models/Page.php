@@ -83,7 +83,7 @@ class Page extends Model
                     return parent::all()->keyBy('id') ?: [];
                 });
             }
-            if ($id) {
+            if ($id !== null) {
                 return self::$_pagesCache->get($id) ?: null;
             }
         } catch (\Exception $e) {
