@@ -4,7 +4,7 @@ namespace CDeep\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Http\Response;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -47,18 +47,20 @@ class Controller extends BaseController
 
     /**
      * @param Request $request
-     * @param $query
+     * @param Builder $query
      * @param int $perPage
-     * @return mixed
+     * @param int $perPageMax
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    protected function paginate(Request $request, $query, $perPage=15)
+    protected function paginate(Request $request, Builder $query, $perPage=15, $perPageMax=50)
     {
-        return $query->paginate(
-            min($request->get('per_page', max(1,$perPage)), 50)
-        )
-            ->appends(
-                $request->query()
-            );
+        $paginate = $query->paginate(
+            min($request->get('per_page', max(1,$perPage)), $perPageMax)
+        );
+        $paginate->appends(
+            $request->query()
+        );
+        return $paginate;
     }
 
     /**
