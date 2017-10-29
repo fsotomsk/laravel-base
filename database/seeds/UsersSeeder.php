@@ -18,7 +18,7 @@ class UsersSeeder extends Seeder
                     'group_id'  => 1,
                     'email'     => 'root@localhost',
                     'name'      => 'Charlie Root',
-                    'password'  => encrypt('toor'),
+                    'password'  => Hash::make('toor'),
                     'api_token' => 'KKOkIbOJXh07TA0DLEqq1S1LHKUx1BP4CdsLiiFU3bWg185iTERH1hBoeTTO',
                 ],
                 [
@@ -26,7 +26,7 @@ class UsersSeeder extends Seeder
                     'group_id'  => 10000,
                     'email'     => 'test@localhost',
                     'name'      => 'test',
-                    'password'  => encrypt('tset'),
+                    'password'  => Hash::make('tset'),
                     'api_token' => 'dXpOt9h1t3ZnFFjKmHh0JNz9621y3cdyWCPCMb7CrgvQa5D0N5lBNQXSgVpo',
                 ],
             ];
