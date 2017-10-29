@@ -74,7 +74,7 @@ class RouteServiceProvider extends ServiceProvider
                             case '@route':
                                 $routes[ $name ][ $methodName ] = [
                                     'url'        => $value[0],
-                                    'as'         => $value[1] ?? null,
+                                    'name'       => $value[1] ?? null,
                                     'title'      => null,
                                     'page'       => null,
                                     'example'    => null,
@@ -114,9 +114,9 @@ class RouteServiceProvider extends ServiceProvider
                                         = [array_shift($value), implode(' ', $value)];
                                 }
                                 break;
-                            case '@as':
+                            case '@name':
                                 if (isset($routes[ $name ][ $methodName ])) {
-                                    $routes[ $name ][ $methodName ]['as'] = array_shift($value);
+                                    $routes[ $name ][ $methodName ]['name'] = array_shift($value);
                                 }
                                 break;
                             case '@example':
@@ -188,7 +188,7 @@ class RouteServiceProvider extends ServiceProvider
                     $params['routes_all'] = $routes;
                     unset($params['routes_all'][$class]);
                 }
-                $router->match($params['method'], $params['url'], $params);
+                $router->match($params['method'], $params['url'], $params)->name($params['name']);
             }
         }
 
