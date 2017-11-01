@@ -22,7 +22,7 @@ class LetsEncrypt
 
     protected
         $thumbprint,
-        $acmePath  = '.well-known/acme-challenge/';
+        $acmePath  = '.well-known/acme-challenge';
 
     /**
      * LetsEncrypt constructor.
@@ -275,21 +275,24 @@ class LetsEncrypt
         if (!is_dir($documentRoot)){
             $this->error('DocRoot does not exist: ' . $documentRoot);
         }
-        @mkdir($documentRoot . $this->acmePath,0755,true);
 
-        if (!is_dir($documentRoot . $this->acmePath)){
-            $this->error('Failed to create acme challenge directory: '. $documentRoot . $this->acmePath);
+        $acmePath = "{$documentRoot}/{$this->acmePath}";
+
+        @mkdir($acmePath,0755,true);
+
+        if (!is_dir($acmePath)){
+            $this->error("Failed to create acme challenge directory: {$acmePath}");
         }
 
         $keyAuthorization = $challenge['token'] . '.' . $this->thumbprint;
 
-        if (false === @file_put_contents($documentRoot . $this->acmePath . $challenge['token'],$keyAuthorization)){
-            $this->error('Failed to create challenge file: ' . $documentRoot . $this->acmePath . $challenge['token']);
+        if (false === @file_put_contents("{$acmePath}/{$challenge['token']}", $keyAuthorization)){
+            $this->error("Failed to create challenge file: {$acmePath}/{$challenge['token']}");
         }
 
-        file_put_contents($documentRoot . $this->acmePath . '.htaccess', 'RewriteEngine Off' . PHP_EOL . 'Allow from all' . PHP_EOL);
+        file_put_contents("{$acmePath}/.htaccess", 'RewriteEngine Off' . PHP_EOL . 'Allow from all' . PHP_EOL);
 
-        $this->info('writeChallenge: ' . $documentRoot . $this->acmePath . $challenge['token']);
+        $this->info("writeChallenge: {$acmePath}/{$challenge['token']}");
     }
 
     /**
@@ -298,9 +301,7 @@ class LetsEncrypt
      */
     final protected function removeChallenge($documentRoot, $challenge)
     {
-        unlink($documentRoot . $this->acmePath . $challenge['token']);
-        //@rmdir($documentRoot . $this->acmePath);
-        //@rmdir($documentRoot . dirname($this->acmePath));
+        unlink("{$documentRoot}/{$this->acmePath}/{$challenge['token']}");
     }
 
     /**
@@ -340,13 +341,13 @@ class LetsEncrypt
     final protected function generateCsr($domainKeyPem, $domains)
     {
         if (!file_exists($domainKeyPem)) {
-            $this->info('Key file is not exists ' . $domainKeyPem);
+            $this->info("Key file is not exists {$domainKeyPem}");
             $domainKeyPem = $this->generateRsaFile($domainKeyPem, 2048);
         }
 
         if (false === ($domainKey = openssl_pkey_get_private('file://' . $domainKeyPem))){
             $this->error(
-                'Could not load domain key: ' . $domainKeyPem . "\n" .
+                "Could not load domain key: {$domainKeyPem}\n" .
                 openssl_error_string()
             );
         }
@@ -366,11 +367,11 @@ class LetsEncrypt
                 '[SAN]'."\n".
                 'subjectAltName='.
                 implode(',',array_map(function($domain){
-                    return 'DNS:'  .$domain;
+                    return 'DNS:' . $domain;
                 }, $domains)).
                 "\n"
             )){
-            $this->error('Failed to write tmp file: '.$fn);
+            $this->error('Failed to write tmp file: ' . $fn);
         }
 
         $dn = ['commonName' => reset($domains)];
@@ -413,11 +414,12 @@ class LetsEncrypt
             : [];
 
         $ret = $this->request('new-reg',$data,null,false,409);
+        $reg = [];
 
         switch($ret['code']){
             case 409: // account already registered
                 $reg = $ret['headers']['location'];
-                $ret = $this->request('reg',$data,$reg);
+                $ret = $this->request('reg', $data, $reg);
                 break;
             case 201: // account created
                 $reg = $ret['headers']['location'];
@@ -429,7 +431,7 @@ class LetsEncrypt
 
         if ( !isset($ret['body']['agreement']) ){
             $data['agreement'] = $ret['headers']['link']['terms-of-service'];
-            $ret['confirmed'] = $this->request('reg',$data,$reg);
+            $ret['confirmed']  = $this->request('reg', $data, $reg);
         }
 
         $this->info('Account: ', $ret);
@@ -447,14 +449,14 @@ class LetsEncrypt
             $challenge = ['token' => $token];
             $this->writeChallenge($documentRoot, $challenge);
             try {
-                $ret = $this->httpRequest('http://' . $domain . '/' . $this->acmePath . $challenge['token'], null, true);
-                if ($ret['body'] == $token . '.' . $this->thumbprint){
+                $ret = $this->httpRequest("http://{$domain}/{$this->acmePath}/{$challenge['token']}", null, true);
+                if ($ret['body'] == "{$token}.{$this->thumbprint}"){
                     $okDomains[$domain] = $documentRoot;
-                    $this->info('Domain simulate success: ' . $domain . ' / ' . $documentRoot);
+                    $this->info("Domain simulate success: {$domain} / {$documentRoot}");
                 }
                 usleep(500000);
             } catch(\Exception $e) {
-                $this->info('Domain simulate fail: ' . $domain . ' / ' . 'http://' . $domain . '/' . $this->acmePath . $challenge['token']);
+                $this->info("Domain simulate fail: {$domain} / http://{$domain}/{$this->acmePath}/{$challenge['token']}");
             } finally {
                 $this->removeChallenge($documentRoot, $challenge);
             }
@@ -468,7 +470,7 @@ class LetsEncrypt
     private function checkOutputWritable($opts){
         foreach($opts as $type => $fn){
             if (!is_writable(file_exists($fn) ? $fn : dirname($fn))) {
-                $this->error('Output file is not writable (' . $type . '): ' . $fn);
+                $this->error("Output file is not writable ({$type}): {$fn}");
             }
         }
     }
