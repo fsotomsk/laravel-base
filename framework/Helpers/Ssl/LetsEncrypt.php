@@ -298,11 +298,9 @@ class LetsEncrypt
      */
     final protected function removeChallenge($documentRoot, $challenge)
     {
-        return;
         unlink($documentRoot . $this->acmePath . $challenge['token']);
-        unlink($documentRoot . $this->acmePath . '.htaccess');
-        @rmdir($documentRoot . $this->acmePath);
-        @rmdir($documentRoot . dirname($this->acmePath));
+        //@rmdir($documentRoot . $this->acmePath);
+        //@rmdir($documentRoot . dirname($this->acmePath));
     }
 
     /**
@@ -445,7 +443,7 @@ class LetsEncrypt
     private function simulateChallenges($domains){
         $okDomains = [];
         foreach($domains as $domain => $documentRoot){
-            $token     = uniqid();
+            $token     = str_random(20);
             $challenge = ['token' => $token];
             $this->writeChallenge($documentRoot, $challenge);
             try {
@@ -625,7 +623,10 @@ class LetsEncrypt
             }
         }
 
-        return openssl_x509_parse(openssl_x509_read($cert),true);
+        return [
+            'certInfo'          => $this->getCertInfo($cert),
+            'validatedDomains'  => array_keys($validatedDomains),
+        ];
     }
 
     /**
