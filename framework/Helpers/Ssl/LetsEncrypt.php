@@ -239,10 +239,10 @@ class LetsEncrypt
 
         if (is_array($json)){
             if ($accept != '409' && isset($json['detail'])) {
-                $this->error($json['detail']);
+                $this->error('detail: ' . $json['detail']);
             }
             if (isset($json['error']) && is_array($json['error']) && isset($json['error']['detail'])) {
-                $this->error($json['error']['detail']);
+                $this->error('error.detail: ' . $json['error']['detail']);
             }
         }
 
