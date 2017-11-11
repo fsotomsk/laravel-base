@@ -22,6 +22,9 @@ class JobStatusServiceProvider extends ServiceProvider
     {
         // Add Event listeners
         app(QueueManager::class)->before(function (JobProcessing $event) {
+            if (!$this->isTrackable($event->job)) {
+                return;
+            }
             $this->updateJobStatus($event->job, [
                 'status' => 'executing',
                 'job_id' => $event->job->getJobId(),
@@ -31,6 +34,9 @@ class JobStatusServiceProvider extends ServiceProvider
             ]);
         });
         app(QueueManager::class)->after(function (JobProcessed $event) {
+            if (!$this->isTrackable($event->job)) {
+                return;
+            }
             $this->updateJobStatus($event->job, [
                 'status' => 'finished',
                 'attempts' => $event->job->attempts(),
@@ -38,6 +44,9 @@ class JobStatusServiceProvider extends ServiceProvider
             ]);
         });
         app(QueueManager::class)->failing(function (JobFailed $event) {
+            if (!$this->isTrackable($event->job)) {
+                return;
+            }
             $this->updateJobStatus($event->job, [
                 'status' => 'failed',
                 'attempts' => $event->job->attempts(),
@@ -45,6 +54,9 @@ class JobStatusServiceProvider extends ServiceProvider
             ]);
         });
         app(QueueManager::class)->exceptionOccurred(function (JobExceptionOccurred $event) {
+            if (!$this->isTrackable($event->job)) {
+                return;
+            }
             $this->updateJobStatus($event->job, [
                 'status' => 'failed',
                 'attempts' => $event->job->attempts(),
@@ -56,15 +68,36 @@ class JobStatusServiceProvider extends ServiceProvider
 
     /**
      * @param Job $job
+     * @return bool
+     */
+    private function isTrackable(Job $job)
+    {
+        $jobStatus = $this->getJob($job);
+        if (!is_callable([$jobStatus, 'isJobStatusInitialized'])) {
+            return false;
+        }
+
+        return $jobStatus->isJobStatusInitialized();
+    }
+
+    /**
+     * @param Job $job
+     * @return mixed
+     */
+    private function getJob(Job $job)
+    {
+        return unserialize($job->payload()['data']['command'] ?? null);
+    }
+
+    /**
+     * @param Job $job
      * @param array $data
      * @return bool|void
      */
     private function updateJobStatus(Job $job, array $data)
     {
         try {
-            $payload = $job->payload();
-            $jobStatus = unserialize($payload['data']['command']);
-            
+            $jobStatus = $this->getJob($job);
             if (!is_callable([$jobStatus, 'getJobStatusId'])) {
                 return;
             }
@@ -74,7 +107,7 @@ class JobStatusServiceProvider extends ServiceProvider
             $jobStatus = JobStatus::where('id', '=', $jobStatusId);
             return $jobStatus->update($data);
         } catch (\Exception $e) {
-            Log::error($e->getMessage());
+            Log::error("{$e->getMessage()} [{$e->getFile()}:{$e->getLine()}]");
         }
     }
 }

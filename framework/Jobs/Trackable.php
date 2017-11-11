@@ -6,8 +6,15 @@ use CDeep\Models\JobStatus;
 
 trait Trackable
 {
-    /** @var int $statusId */
+    /**
+     * @var int
+     */
     protected $statusId;
+
+    /**
+     * @var bool
+     */
+    public $statusInitialized = false;
 
     protected function setProgressMax($value)
     {
@@ -49,9 +56,22 @@ trait Trackable
                 'input' => $input,
             ]);
             $this->statusId = $status->id;
+            $this->statusInitialized = true;
         }
     }
 
+    /**
+     * @return bool
+     */
+    public function isJobStatusInitialized()
+    {
+        return !empty($this->statusId);
+    }
+
+    /**
+     * @return int
+     * @throws \Exception
+     */
     public function getJobStatusId()
     {
         if ($this->statusId == null) {
@@ -61,6 +81,9 @@ trait Trackable
         return $this->statusId;
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|null|static|static[]
+     */
     public function getJobStatus()
     {
         return JobStatus::find(
