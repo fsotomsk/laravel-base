@@ -28,7 +28,7 @@ class ApiRequest
          */
         $response = null;
 
-        if (!$request->isDebug && $request->getMethod() == 'GET' && $action['cache'][0]) {
+        if (!$request->isDebug && $request->getMethod() == 'GET' && ($action['cache'] && $action['cache'][0])) {
             $key   = 'api:cache:' . md5($request->getRequestUri());
             $cache = \Cache::get($key, null);
             if ($cache) {
