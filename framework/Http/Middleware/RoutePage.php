@@ -18,7 +18,7 @@ class RoutePage
     public function handle(Request $request, Closure $next)
     {
         $action = $request->route()->getAction();
-        if ($action && $action['page'] instanceof Page) {
+        if ($action && isset($action['page']) && $action['page'] instanceof Page) {
             /**
              * @var Page $page
              */
