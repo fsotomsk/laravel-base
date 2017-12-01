@@ -82,7 +82,7 @@ trait Trackable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|null|static|static[]
+     * @return JobStatus
      */
     public function getJobStatus()
     {
